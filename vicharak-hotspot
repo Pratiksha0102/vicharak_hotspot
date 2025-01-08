@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Read board model while removing null bytes
+uname_output=$(cat /proc/device-tree/model | tr -d '\0')
+
+# Print the retrieved model name
+echo "Board model: $uname_output"
+
+# Check for 'Vaaman' or 'Axon' in the output and set the board name
+if echo "$uname_output" | grep -qi "vaaman"; then
+    board_name="Vaaman"
+elif echo "$uname_output" | grep -qi "Axon"; then
+    board_name="Axon"
+else
+    board_name="Not found"
+fi
+
+# Print the determined board name
+echo "Board name: $board_name"
+
+if [ -z "$board_name" ]; then
+  echo "Board name not found in uname -a."
+  exit 1
+fi
+
+# Set the hotspot name using the board name
+hotspot_name="${board_name}Host"
+
+# Commands to create and configure the hotspot
+echo "Creating hotspot with name: $hotspot_name"
+
+sudo nmcli device wifi hotspot ifname p2p0 con-name "$hotspot_name" ssid "$hotspot_name" band bg password 12345678
+if [ $? -ne 0 ]; then
+  echo "Failed to create hotspot."
+  exit 1
+fi
+
+sudo nmcli connection modify "$hotspot_name" 802-11-wireless-security.key-mgmt wpa-psk
+sudo nmcli connection modify "$hotspot_name" ipv4.addresses 10.7.8.9/24
+
+# Bring the connection up
+sudo nmcli connection up "$hotspot_name"
+if [ $? -eq 0 ]; then
+  echo "Hotspot $hotspot_name is up and running."
+else
+  echo "Failed to bring up the hotspot $hotspot_name."
+  exit 1
+fi

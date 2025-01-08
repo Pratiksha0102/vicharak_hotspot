@@ -1,0 +1,8 @@
+Source: vicharak-hotspot
+Priority: optional
+Maintainer: Pratiksha0102 <pratikshathanki2501@gmail.com>
+Build-Depends: debhelper-compat (= 13)
+
+Package: vicharak-hotspot
+Architecture: arm64
+Description: Vicharak hotspot package to create hotspot on vicharak boards.

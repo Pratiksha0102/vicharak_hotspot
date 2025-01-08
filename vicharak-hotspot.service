@@ -1,0 +1,11 @@
+[Unit]
+Description=Wi-Fi Hotspot Service for p2p0
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/vicharak-hotspot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sudo rm -f /usr/local/bin/vicharak-hotspot
+sudo systemctl disable vicharak-hotspot.service 
+sudo systemctl stop vicharak-hotspot.service
+sudo systemctl deamon-reload
+sudo rm -f /etc/systemd/system/vicharak-hotspot.service

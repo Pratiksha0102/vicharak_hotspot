@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+
+# Binary target for building the actual package
+binary:
+	# Create necessary directories
+	mkdir -m 755 -p debian/vicharak-hotspot/etc/systemd/system
+	mkdir -m 755 -p debian/vicharak-hotspot/usr/local/bin/
+	mkdir -m 755 -p debian/vicharak-hotspot/DEBIAN
+	# Set permissions and copy files into the package structure
+	chmod +x vicharak-hotspot
+	cp vicharak-hotspot.service debian/vicharak-hotspot/etc/systemd/system
+	cp vicharak-hotspot debian/vicharak-hotspot/usr/local/bin
+	cp postinst debian/vicharak-hotspot/DEBIAN
+	cp prerm debian/vicharak-hotspot/DEBIAN
+	# Set the permissions for post-installation and pre-removal scripts
+	chmod -R 755 debian/vicharak-hotspot/DEBIAN/postinst
+	chmod -R 755 debian/vicharak-hotspot/DEBIAN/prerm
+	# Call the Debian helpers to manage shared libraries, control files, and building the package
+	dh_makeshlibs
+	dh_gencontrol
+	dh_builddeb
+
+# Clean target to clean up generated files from previous builds
+clean:
+	dh clean
+	rm -rf debian/vicharak-hotspot
+
+%:
+	dh $@
